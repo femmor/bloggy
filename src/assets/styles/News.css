@@ -14,6 +14,52 @@
     min-height: 7rem;
     background-color: var(--main-black-color);
     border-radius: 1rem 1rem 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4rem;
+}
+
+.logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: #ddd;
+    letter-spacing: .2rem;
+}
+
+.search-bar {
+    position: relative;
+}
+
+.search-bar input {
+    width: 25rem;
+    height: 4rem;
+    border: none;
+    background-color: #060709;
+    border-radius: 5rem;
+    padding: 0 4rem 0 2rem;
+    color: #ddd;
+    transition: width .3s;
+}
+
+.search-bar input:focus {
+    width: 35rem;
+}
+
+.search-bar input:focus::placeholder {
+    color: transparent;
+}
+
+.search-bar button {
+    background-color: transparent;
+    color: #bbb;
+    border: none;
+    position: absolute;
+    top: 50%;
+    right: 1.2rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding-top: .6rem;
 }
 
 .news-content {

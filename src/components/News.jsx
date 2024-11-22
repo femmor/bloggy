@@ -1,10 +1,22 @@
 import { Weather, Calendar } from "../components";
 import "../assets/styles/News.css";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+
 
 const News = () => {
   return (
     <div className="news">
-      <header className="news-header">News Header</header>
+      <header className="news-header">
+        <h1 className="logo">News & Blog</h1>
+        <div className="search-bar">
+          <form>
+            <input type="text" placeholder="Search news..." aria-label="Search news"/>
+            <button type="submit">
+              <HiOutlineMagnifyingGlass size={16}/>
+            </button>
+          </form>
+        </div>
+      </header>
       <div className="news-content">
         <div className="navbar">
           <div className="user">User</div>

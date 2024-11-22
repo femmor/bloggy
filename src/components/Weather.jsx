@@ -1,0 +1,8 @@
+import "../assets/styles/Weather.css";
+
+const Weather = () => {
+  return (
+    <div className="weather">Weather</div>
+  )
+}
+export default Weather

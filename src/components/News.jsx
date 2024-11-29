@@ -21,8 +21,8 @@ const categories = [
   "sports",
   "science",
   "health",
-  "nation"
-]
+  "nation",
+];
 
 const News = () => {
   const [headline, setHeadline] = useState(null);
@@ -31,15 +31,21 @@ const News = () => {
   const [selectedCategory, setSelectedCategory] = useState("general");
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
-   // Fetching news data from API
+  // Fetching news data from API
   const fetchNews = async () => {
     setLoading(true);
     try {
-      let url = `https://gnews.io/api/v4/top-headlines?category=${selectedCategory}&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+      let url = `https://gnews.io/api/v4/top-headlines?category=${selectedCategory}&lang=en&apikey=${
+        import.meta.env.VITE_GNEWS_API_KEY
+      }`;
 
       if (searchQuery) {
-        url = `https://gnews.io/api/v4/search?q=${searchQuery}&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+        url = `https://gnews.io/api/v4/search?q=${searchQuery}&lang=en&apikey=${
+          import.meta.env.VITE_GNEWS_API_KEY
+        }`;
       }
 
       const response = await axios.get(url);
@@ -49,13 +55,13 @@ const News = () => {
         if (!article.image) {
           article.image = newsPlaceholder;
         }
-      })
+      });
 
       setLoading(false);
       setHeadline(fetchedNews[0]);
       setNews(fetchedNews.slice(1, 7));
     } catch (error) {
-        setLoading(false);
+      setLoading(false);
       console.error("Error fetching news: ", error);
     }
   };
@@ -65,12 +71,12 @@ const News = () => {
     e.preventDefault();
 
     setSelectedCategory(category);
-  }
+  };
 
   // Handles search input change
   const handleSearchInputChange = (e) => {
     setSearchInput(e.target.value);
-  }
+  };
 
   // Handles search form submission
   const handleSearch = (e) => {
@@ -78,12 +84,18 @@ const News = () => {
 
     setSearchQuery(searchInput);
     setSearchInput("");
-  }
+  };
+
+  // Handles clicking on a news article
+  const handleSelectedArticle = (article) => {
+    setSelectedArticle(article);
+    setShowModal(true);
+  };
 
   // Fetch news on component mount and when selected category or search query changes
   useEffect(() => {
     fetchNews();
-  }, [selectedCategory, searchQuery])
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="news">
@@ -114,11 +126,16 @@ const News = () => {
             <h1 className="nav-heading">Categories</h1>
             <div className="nav-links">
               {categories.map((category) => (
-                <a href="#" className="nav-link" key={category} onClick={(e) => handleCategoryChange(e, category)}>
-                {category}
-              </a>
+                <a
+                  href="#"
+                  className="nav-link"
+                  key={category}
+                  onClick={(e) => handleCategoryChange(e, category)}
+                >
+                  {category}
+                </a>
               ))}
-              
+
               <a href="#" className="nav-link">
                 Bookmarks <GoBookmark className="bookmark-icon" size={20} />
               </a>
@@ -126,25 +143,44 @@ const News = () => {
           </nav>
         </div>
         <div className="news-section">
-          {headline && (<div className="headline">
-            <img src={headline.image || newsPlaceholder} alt={headline.title} />
-            <h2 className="headline-title">
-              {headline?.title} <FaRegBookmark className="bookmark"/>
-            </h2>
-          </div>)}
-          <div className="news-grid">
-            {news && news.map((article, idx) => (
-              <div className="news-grid-item" key={idx}>
-              <img src={article.image || newsPlaceholder} alt={article.title} />
-              <h3 className="news-title">
-                {article.title.substr(0, 20) + '...'} <FaRegBookmark className="bookmark"/>
-              </h3>
+          {headline && (
+            <div className="headline" onClick={() => handleSelectedArticle(headline)}>
+              <img
+                src={headline.image || newsPlaceholder}
+                alt={headline.title}
+              />
+              <h2 className="headline-title">
+                {headline?.title} <FaRegBookmark className="bookmark" onClick={() => console.log("Bookmark!")}/>
+              </h2>
             </div>
-            ))}
-            
+          )}
+          <div className="news-grid">
+            {news &&
+              news.map((article, idx) => (
+                <div
+                  className="news-grid-item"
+                  key={idx}
+                  onClick={() => handleSelectedArticle(article)}
+                >
+                  <img
+                    src={article.image || newsPlaceholder}
+                    alt={article.title}
+                  />
+                  <h3 className="news-title">
+                    {article.title.substr(0, 20) + "..."}{" "}
+                    <FaRegBookmark className="bookmark" onClick={() => console.log("Bookmark!")}/>
+                  </h3>
+                </div>
+              ))}
           </div>
         </div>
-        <NewsModal />
+        {showModal && (
+          <NewsModal
+            article={selectedArticle}
+            show={showModal}
+            onClose={() => setShowModal(false)}
+          />
+        )}
         <div className="blog-section">My Blogs</div>
         <div className="weather-calendar">
           <Weather />

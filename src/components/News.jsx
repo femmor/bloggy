@@ -2,8 +2,17 @@ import { Weather, Calendar } from "../components";
 import "../assets/styles/News.css";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GoBookmark } from "react-icons/go";
+import { FaRegBookmark } from "react-icons/fa";
+
 
 import userImg from "../assets/images/user.jpg";
+import techImage from "../assets/images/tech.jpg";
+import sportsImg from "../assets/images/sports.jpg";
+import scienceImg from "../assets/images/science.jpg";
+import healthImg from "../assets/images/health.jpg";
+import entertainmentImg from "../assets/images/entertainment.jpg";
+import worldImg from "../assets/images/entertainment.jpg";
+import nationImg from "../assets/images/world.jpg";
 
 const News = () => {
   return (
@@ -63,8 +72,51 @@ const News = () => {
           </nav>
         </div>
         <div className="news-section">
-          <div className="headline">Headline</div>
-          <div className="news-grid">News Grid</div>
+          <div className="headline">
+            <img src={techImage} alt="Headline image" />
+            <h2 className="headline-title">
+              Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+
+            </h2>
+          </div>
+          <div className="news-grid">
+            <div className="news-grid-item">
+              <img src={nationImg} alt="Worlds image" />
+              <h3 className="news-title">
+                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+              </h3>
+            </div>
+            <div className="news-grid-item">
+              <img src={sportsImg} alt="Sports image" />
+              <h3 className="news-title">
+                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+              </h3>
+            </div>
+            <div className="news-grid-item">
+              <img src={scienceImg} alt="Science image" />
+              <h3 className="news-title">
+                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+              </h3>
+            </div>
+            <div className="news-grid-item">
+              <img src={healthImg} alt="Health image" />
+              <h3 className="news-title">
+                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+              </h3>
+            </div>
+            <div className="news-grid-item">
+              <img src={entertainmentImg} alt="Entertainment image" />
+              <h3 className="news-title">
+                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+              </h3>
+            </div>
+            <div className="news-grid-item">
+              <img src={worldImg} alt="Entertainment image" />
+              <h3 className="news-title">
+                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+              </h3>
+            </div>
+          </div>
         </div>
         <div className="blog-section">My Blogs</div>
         <div className="weather-calendar">

@@ -4,6 +4,7 @@ import { Weather, Calendar } from "../components";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GoBookmark } from "react-icons/go";
 import { FaRegBookmark } from "react-icons/fa";
+import NewsModal from "./NewsModal";
 
 import "../assets/styles/News.css";
 
@@ -143,6 +144,7 @@ const News = () => {
             
           </div>
         </div>
+        <NewsModal />
         <div className="blog-section">My Blogs</div>
         <div className="weather-calendar">
           <Weather />

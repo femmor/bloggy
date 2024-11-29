@@ -28,12 +28,19 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("general");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
    // Fetching news data from API
   const fetchNews = async () => {
     setLoading(true);
     try {
-      const url = `https://gnews.io/api/v4/top-headlines?category=${selectedCategory}&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+      let url = `https://gnews.io/api/v4/top-headlines?category=${selectedCategory}&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+
+      if (searchQuery) {
+        url = `https://gnews.io/api/v4/search?q=${searchQuery}&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+      }
+
       const response = await axios.get(url);
       const fetchedNews = response.data.articles;
 
@@ -52,26 +59,43 @@ const News = () => {
     }
   };
 
-  useEffect(() => {
-    fetchNews();
-  }, [selectedCategory])
-
+  // Handles category change
   const handleCategoryChange = (e, category) => {
     e.preventDefault();
 
     setSelectedCategory(category);
   }
 
+  // Handles search input change
+  const handleSearchInputChange = (e) => {
+    setSearchInput(e.target.value);
+  }
+
+  // Handles search form submission
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    setSearchQuery(searchInput);
+    setSearchInput("");
+  }
+
+  // Fetch news on component mount and when selected category or search query changes
+  useEffect(() => {
+    fetchNews();
+  }, [selectedCategory, searchQuery])
+
   return (
     <div className="news">
       <header className="news-header">
         <h1 className="logo">News & Blog</h1>
         <div className="search-bar">
-          <form>
+          <form onSubmit={handleSearch}>
             <input
               type="text"
               placeholder="Search news..."
               aria-label="Search news"
+              value={searchInput}
+              onChange={handleSearchInputChange}
             />
             <button type="submit">
               <HiOutlineMagnifyingGlass size={16} />

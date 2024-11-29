@@ -1,20 +1,50 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Weather, Calendar } from "../components";
-import "../assets/styles/News.css";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GoBookmark } from "react-icons/go";
 import { FaRegBookmark } from "react-icons/fa";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
+import "../assets/styles/News.css";
+
+// Import images
 import userImg from "../assets/images/user.jpg";
-import techImage from "../assets/images/tech.jpg";
-import sportsImg from "../assets/images/sports.jpg";
-import scienceImg from "../assets/images/science.jpg";
-import healthImg from "../assets/images/health.jpg";
-import entertainmentImg from "../assets/images/entertainment.jpg";
-import worldImg from "../assets/images/entertainment.jpg";
-import nationImg from "../assets/images/world.jpg";
+import newsPlaceholder from "../assets/images/news-placeholder.jpg";
 
 const News = () => {
+  const [headline, setHeadline] = useState(null);
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+   // Fetching news data from API
+  const fetchNews = async () => {
+    setLoading(true);
+    try {
+      const url = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+      const response = await axios.get(url);
+      const fetchedNews = response.data.articles;
+
+      fetchedNews.forEach((article) => {
+        if (!article.image) {
+          article.image = newsPlaceholder;
+        }
+      })
+
+      setLoading(false);
+      setHeadline(fetchedNews[0]);
+      setNews(fetchedNews.slice(1, 7));
+    } catch (error) {
+        setLoading(false);
+      console.error("Error fetching news: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, [])
+
   return (
     <div className="news">
       <header className="news-header">
@@ -72,50 +102,22 @@ const News = () => {
           </nav>
         </div>
         <div className="news-section">
-          <div className="headline">
-            <img src={techImage} alt="Headline image" />
+          {headline && (<div className="headline">
+            <img src={headline.image || newsPlaceholder} alt={headline.title} />
             <h2 className="headline-title">
-              Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
-
+              {headline?.title} <FaRegBookmark className="bookmark"/>
             </h2>
-          </div>
+          </div>)}
           <div className="news-grid">
-            <div className="news-grid-item">
-              <img src={nationImg} alt="Worlds image" />
+            {news && news.map((article, idx) => (
+              <div className="news-grid-item" key={idx}>
+              <img src={article.image || newsPlaceholder} alt={article.title} />
               <h3 className="news-title">
-                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
+                {article.title.substr(0, 20) + '...'} <FaRegBookmark className="bookmark"/>
               </h3>
             </div>
-            <div className="news-grid-item">
-              <img src={sportsImg} alt="Sports image" />
-              <h3 className="news-title">
-                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
-              </h3>
-            </div>
-            <div className="news-grid-item">
-              <img src={scienceImg} alt="Science image" />
-              <h3 className="news-title">
-                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
-              </h3>
-            </div>
-            <div className="news-grid-item">
-              <img src={healthImg} alt="Health image" />
-              <h3 className="news-title">
-                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
-              </h3>
-            </div>
-            <div className="news-grid-item">
-              <img src={entertainmentImg} alt="Entertainment image" />
-              <h3 className="news-title">
-                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
-              </h3>
-            </div>
-            <div className="news-grid-item">
-              <img src={worldImg} alt="Entertainment image" />
-              <h3 className="news-title">
-                Lorem, ipsum dolor sit amet <FaRegBookmark className="bookmark"/>
-              </h3>
-            </div>
+            ))}
+            
           </div>
         </div>
         <div className="blog-section">My Blogs</div>

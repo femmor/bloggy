@@ -4,8 +4,6 @@ import { Weather, Calendar } from "../components";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GoBookmark } from "react-icons/go";
 import { FaRegBookmark } from "react-icons/fa";
-import ClipLoader from "react-spinners/ClipLoader";
-
 
 import "../assets/styles/News.css";
 
@@ -13,16 +11,29 @@ import "../assets/styles/News.css";
 import userImg from "../assets/images/user.jpg";
 import newsPlaceholder from "../assets/images/news-placeholder.jpg";
 
+const categories = [
+  "general",
+  "world",
+  "business",
+  "technology",
+  "entertainment",
+  "sports",
+  "science",
+  "health",
+  "nation"
+]
+
 const News = () => {
   const [headline, setHeadline] = useState(null);
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("general");
 
    // Fetching news data from API
   const fetchNews = async () => {
     setLoading(true);
     try {
-      const url = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
+      const url = `https://gnews.io/api/v4/top-headlines?category=${selectedCategory}&lang=en&apikey=${import.meta.env.VITE_GNEWS_API_KEY}`;
       const response = await axios.get(url);
       const fetchedNews = response.data.articles;
 
@@ -43,7 +54,13 @@ const News = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [])
+  }, [selectedCategory])
+
+  const handleCategoryChange = (e, category) => {
+    e.preventDefault();
+
+    setSelectedCategory(category);
+  }
 
   return (
     <div className="news">
@@ -71,30 +88,12 @@ const News = () => {
           <nav className="categories">
             <h1 className="nav-heading">Categories</h1>
             <div className="nav-links">
-              <a href="#" className="nav-link">
-                General
+              {categories.map((category) => (
+                <a href="#" className="nav-link" key={category} onClick={(e) => handleCategoryChange(e, category)}>
+                {category}
               </a>
-              <a href="#" className="nav-link">
-                World
-              </a>
-              <a href="#" className="nav-link">
-                Business
-              </a>
-              <a href="#" className="nav-link">
-                Technology
-              </a>
-              <a href="#" className="nav-link">
-                Entertainment
-              </a>
-              <a href="#" className="nav-link">
-                Sports
-              </a>
-              <a href="#" className="nav-link">
-                Science
-              </a>
-              <a href="#" className="nav-link">
-                Health
-              </a>
+              ))}
+              
               <a href="#" className="nav-link">
                 Bookmarks <GoBookmark className="bookmark-icon" size={20} />
               </a>

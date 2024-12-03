@@ -5,6 +5,7 @@ import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GoBookmark } from "react-icons/go";
 import { FaRegBookmark } from "react-icons/fa";
 import NewsModal from "./NewsModal";
+import Bookmarks from "./Bookmarks";
 
 import "../assets/styles/News.css";
 
@@ -181,6 +182,7 @@ const News = () => {
             onClose={() => setShowModal(false)}
           />
         )}
+        <Bookmarks />
         <div className="blog-section">My Blogs</div>
         <div className="weather-calendar">
           <Weather />

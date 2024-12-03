@@ -2,6 +2,7 @@ import propTypes from "prop-types";
 
 import { MdClose } from "react-icons/md";
 
+import "../assets/styles/Modal.css";
 import "../assets/styles/NewsModal.css";
 import { convertDate } from "../utils/convertDate";
 

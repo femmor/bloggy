@@ -63,6 +63,11 @@ const News = () => {
       setLoading(false);
       setHeadline(fetchedNews[0]);
       setNews(fetchedNews.slice(1, 7));
+
+      // Get bookmarks from local storage
+      const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      setBookmarks(storedBookmarks);
+
     } catch (error) {
       setLoading(false);
       console.error("Error fetching news: ", error);
@@ -103,6 +108,9 @@ const News = () => {
       )
         ? prevBookmarks.filter((bookmark) => bookmark.title !== article.title)
         : [...prevBookmarks, article];
+
+        // Store bookmarks in local storage
+        localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
 
       return updatedBookmarks;
     });

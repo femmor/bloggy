@@ -3,7 +3,7 @@ import axios from "axios";
 import { Weather, Calendar } from "../components";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GoBookmark } from "react-icons/go";
-import { FaRegBookmark } from "react-icons/fa";
+import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 import NewsModal from "./NewsModal";
 import Bookmarks from "./Bookmarks";
 
@@ -28,6 +28,8 @@ const categories = [
 const News = () => {
   const [headline, setHeadline] = useState(null);
   const [news, setNews] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [showBookmarksModal, setShowBookmarksModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("general");
   const [searchInput, setSearchInput] = useState("");
@@ -93,6 +95,23 @@ const News = () => {
     setShowModal(true);
   };
 
+  // Handles bookmarking an article
+  const handleBookmarkArticle = (article) => {
+    setBookmarks((prevBookmarks) => {
+      const updatedBookmarks = prevBookmarks.find(
+        (bookmark) => bookmark.title === article.title
+      )
+        ? prevBookmarks.filter((bookmark) => bookmark.title !== article.title)
+        : [...prevBookmarks, article];
+
+      return updatedBookmarks;
+    });
+  };
+
+  const handleCloseBookmarksModal = () => {
+    setShowBookmarksModal(false)
+  }
+
   // Fetch news on component mount and when selected category or search query changes
   useEffect(() => {
     fetchNews();
@@ -137,21 +156,46 @@ const News = () => {
                 </a>
               ))}
 
-              <a href="#" className="nav-link">
-                Bookmarks <GoBookmark className="bookmark-icon" size={20} />
+              <a href="#" className="nav-link" onClick={e => {
+                  e.preventDefault();
+                  setShowBookmarksModal(true)
+                }}>
+                Bookmarks {bookmarks.length > 0 ? <FaBookmark className="bookmark-icon" size={20} color="#FFD523" /> : <GoBookmark className="bookmark-icon" size={20} />}
               </a>
             </div>
           </nav>
         </div>
         <div className="news-section">
           {headline && (
-            <div className="headline" onClick={() => handleSelectedArticle(headline)}>
+            <div
+              className="headline"
+              onClick={() => handleSelectedArticle(headline)}
+            >
               <img
                 src={headline.image || newsPlaceholder}
                 alt={headline.title}
               />
               <h2 className="headline-title">
-                {headline?.title} <FaRegBookmark className="bookmark" onClick={() => console.log("Bookmark!")}/>
+                {headline?.title}{" "}
+                {bookmarks.some(
+                  (bookmark) => bookmark.title === headline.title
+                ) ? (
+                  <FaBookmark
+                    className="bookmark"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleBookmarkArticle(headline);
+                    }}
+                  />
+                ) : (
+                  <FaRegBookmark
+                    className="bookmark"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleBookmarkArticle(headline);
+                    }}
+                  />
+                )}
               </h2>
             </div>
           )}
@@ -169,7 +213,25 @@ const News = () => {
                   />
                   <h3 className="news-title">
                     {article.title.substr(0, 20) + "..."}{" "}
-                    <FaRegBookmark className="bookmark" onClick={() => console.log("Bookmark!")}/>
+                    {bookmarks.some(
+                      (bookmark) => bookmark.title === article.title
+                    ) ? (
+                      <FaBookmark
+                        className="bookmark"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookmarkArticle(article);
+                        }}
+                      />
+                    ) : (
+                      <FaRegBookmark
+                        className="bookmark"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookmarkArticle(article);
+                        }}
+                      />
+                    )}
                   </h3>
                 </div>
               ))}
@@ -182,7 +244,13 @@ const News = () => {
             onClose={() => setShowModal(false)}
           />
         )}
-        <Bookmarks />
+        {showBookmarksModal && (
+          <Bookmarks
+            bookmarks={bookmarks}
+            onClose={handleCloseBookmarksModal}
+            onBookmark={handleBookmarkArticle}
+          />
+        )}
         <div className="blog-section">My Blogs</div>
         <div className="weather-calendar">
           <Weather />

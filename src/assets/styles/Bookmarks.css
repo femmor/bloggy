@@ -46,3 +46,11 @@
 .delete-button:hover {
     color: var(--danger-color);
 }
+
+.no-bookmarks {
+    font-family: "Comfortaa", sans-serif;
+    font-size: 1.5rem;
+    color: #fff;
+    text-align: center;
+    margin-top: 2rem;
+}
